@@ -36,14 +36,27 @@ void Square::erase_row(int row)
 	}
 }
 
+int Square::empty()
+{
+	int a = 0;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			if (data[i][j] == 0)
+				a++;
+		}
+	}
+	return a;
+}
+
 Square::Square()
 {
 	n = 4;
 	data = new double* [n];
 	for (int i = 0; i < n; i++)
 		data[i] = new double[n];
-	for (int i = 0; i < n - 1; i++)
-		addRandom();
+	addRandom(rand() % 2 + 1);
 }
 
 Square::Square(int N)
@@ -55,22 +68,51 @@ Square::Square(int N)
 	for (int i = 0; i < n; i++)
 		for (int j = 0; j < n; j++)
 			data[i][j] = 0;
-	for (int i = 0; i < n - 1; i++)
-		addRandom();
+	addRandom(3);
 }
 
-void Square::addRandom()
+void Square::addRandom(int raz)
 {
-	bool i = false;
-	while (i == false) 
+	bool i = false;;
+	int a = empty();
+	switch (a)
 	{
-		int x = rand() % n;
-		int y = rand() % n;
-		if (data[x][y] == 0)
+	case 1:
+	{
+		while (i == false)
 		{
-			data[x][y] = 2;
-			i = true;
+			int x = rand() % n;
+			int y = rand() % n;
+			if (data[x][y] == 0)
+			{
+				data[x][y] = 2;
+				i = true;
+			}
 		}
+		break;
+	}
+	case 0:
+	{
+		break;
+	}
+	default:
+	{
+		for (int j = 0; j < raz; j++)
+		{
+			i = false;
+			while (i == false)
+			{
+				int x = rand() % n;
+				int y = rand() % n;
+				if (data[x][y] == 0)
+				{
+					data[x][y] = 2;
+					i = true;
+				}
+			}
+		}
+		break;
+	}
 	}
 }
 
@@ -99,11 +141,7 @@ void Square::move_right()
 		}
 		temp.clear();
 	}
-	for (int i = 0; i < n / 2; i++)
-	{
-		addRandom();
-	}
-
+	addRandom(rand() %2 +1);
 }
 
 void Square::move_left()
@@ -128,11 +166,7 @@ void Square::move_left()
 		}
 		temp.clear();
 	}
-	for (int i = 0; i < n/2; i++)
-	{
-		addRandom();
-	}
-
+	addRandom(rand() % 2 + 1);
 }
 
 void Square::move_down()
@@ -160,10 +194,7 @@ void Square::move_down()
 		}
 		temp.clear();
 	}
-	for (int i = 0; i < n / 2; i++)
-	{
-		addRandom();
-	}
+	addRandom(rand() % 2 + 1);
 }
 
 void Square::move_up()
@@ -188,14 +219,63 @@ void Square::move_up()
 		}
 		temp.clear();
 	}
-	for (int i = 0; i < n / 2; i++)
-	{
-		addRandom();
-	}
+	addRandom(rand() % 2 + 1);
 }
 
-int Square::getItem(int i, int k)
+double Square::getItem(int i, int k)
 {
 	return data[i][k];
 }
+
+bool Square::canGame()
+{
+	bool can = true;
+	bool same = false;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n-1; j++)
+		{
+			if (data[i][j]==data[i][j+1])
+			{
+				same = true;
+			}
+		}
+	}
+	for (int i = 0; i < n-1; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			if (data[i][j] == data[i + 1][j])
+			{
+				same = true;
+			}
+		}
+	}
+	if ((empty()>0)||same)
+	{
+		can = true;
+	}
+	else
+	{
+		can = false;
+	}
+	return can;
+}
+
+double Square::getMax()
+{
+	double max = data[0][0];
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			if (data[i][j]>max)
+			{
+				max = data[i][j];
+			}
+		}
+	}
+	return max;
+}
+
 
